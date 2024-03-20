@@ -7,33 +7,34 @@
 #include <iostream>
 using namespace std;
 
-void BresenhamCircle(int xc, int yc, int r) {
-    int x = 0, y = r, d = 3 - (2 * r);
+void BresenhamCircle(int h, int k, int r) {
+    int x = 0;
+    int y = r;
+    int d = 3 - (2 * r);
 
     while (x <= y) {
+        putpixel(x + h, y + k, WHITE);
+        putpixel(y + h, x + k, WHITE);
+        putpixel(-x + h, y + k, WHITE);
+        putpixel(x + h, -y + k, WHITE);
+        putpixel(y + h, -x + k, WHITE);
+        putpixel(-y + h, x + k, WHITE);
+        putpixel(-x + h, -y + k, WHITE);
+        putpixel(-y + h, -x + k, WHITE);
         if (d <= 0) {
             d = d + (4 * x) + 6;
         } else {
             d = d + (4 * x) - (4 * y) + 10;
-            y = y - 1;
+            y--;
         }
-        x = x + 1;
-        putpixel(x + xc, y + yc, WHITE);
-        putpixel(x + xc, -y + yc, WHITE);
-        putpixel(-x + xc, -y + yc, WHITE);
-        putpixel(-x + xc, y + yc, WHITE);
-        putpixel(y + xc, x + yc, WHITE);
-        putpixel(y + xc, -x + yc, WHITE);
-        putpixel(-y + xc, -x + yc, WHITE);
-        putpixel(-y + xc, x + yc, WHITE);
+        x++;
     }
 }
 
 int main(void) {
-    int xc, yc, r, gdriver = DETECT, gmode, errorcode;
-    /* initialize graphics and local variables */
+    int h, k, r, gdriver = DETECT, gmode, errorcode;
 
-    char data[] = "C:\\TDM-GCC-32\\lib\\libbgi.a";  // static file
+    char data[] = "";
     initgraph(&gdriver, &gmode, data);
 
     errorcode = graphresult();
@@ -44,11 +45,12 @@ int main(void) {
         getch();
         exit(1);
     }
-    printf("Enter the values of xc and yc :");
-    cin >> xc >> yc;
+
+    printf("Enter the values of h and k :");
+    cin >> h >> k;
     printf("Enter the value of radius  :");
     cin >> r;
-    BresenhamCircle(xc, yc, r);
+    BresenhamCircle(h, k, r);
 
     getch();
     closegraph();

@@ -1,6 +1,7 @@
 #include <graphics.h>
 
 #include <iostream>
+using namespace std;
 
 const int INSIDE = 0;  // 0000
 const int LEFT = 1;    // 0001
@@ -18,9 +19,9 @@ int computeCode(int x, int y, int xmin, int ymin, int xmax, int ymax) {
         code |= RIGHT;
 
     if (y < ymin)
-        code |= BOTTOM;
-    else if (y > ymax)
         code |= TOP;
+    else if (y > ymax)
+        code |= BOTTOM;
 
     return code;
 }
@@ -33,6 +34,9 @@ void cohenSutherlandClip(int x1, int y1, int x2, int y2, int xmin, int ymin, int
     bool accept = false;
 
     while (true) {
+        cout << x1 << " " << y1 << " " << x2 << " " << y2 << endl;
+        putpixel(x1, y1, WHITE);
+        putpixel(x2, y2, WHITE);
         if ((code1 == 0) && (code2 == 0)) {
             // Both endpoints are inside the clip window
             accept = true;
@@ -52,11 +56,11 @@ void cohenSutherlandClip(int x1, int y1, int x2, int y2, int xmin, int ymin, int
                 codeOut = code2;
 
             // Find intersection point
-            if (codeOut & TOP) {
+            if (codeOut & BOTTOM) {
                 // Point is above the clip window
                 x = x1 + (x2 - x1) * (ymax - y1) / (y2 - y1);
                 y = ymax;
-            } else if (codeOut & BOTTOM) {
+            } else if (codeOut & TOP) {
                 // Point is below the clip window
                 x = x1 + (x2 - x1) * (ymin - y1) / (y2 - y1);
                 y = ymin;
@@ -84,15 +88,14 @@ void cohenSutherlandClip(int x1, int y1, int x2, int y2, int xmin, int ymin, int
     }
 
     if (accept) {
-        // Draw the clipped line
-        setcolor(RED);
+        setcolor(YELLOW);
         line(x1, y1, x2, y2);
     }
 }
 
 int main() {
     int gd = DETECT, gm;
-    initgraph(&gd, &gm, "C:\\Turboc3\\BGI");
+    initgraph(&gd, &gm, "");
 
     // Set the clipping window coordinates
     int xmin = 50, ymin = 50, xmax = 400, ymax = 300;
@@ -101,13 +104,12 @@ int main() {
     rectangle(xmin, ymin, xmax, ymax);
 
     // Draw the original line
-    setcolor(BLUE);
-    line(20, 30, 300, 400);
+    setcolor(12);
+    line(20, 40, 500, 320);
 
     // Clip the line using Cohen-Sutherland algorithm
-    cohenSutherlandClip(20, 30, 300, 400, xmin, ymin, xmax, ymax);
+    cohenSutherlandClip(20, 40, 500, 320, xmin, ymin, xmax, ymax);
 
-    delay(5000);
     getchar();
     closegraph();
     return 0;
